@@ -8,6 +8,8 @@ const client = new Client({
   ],
 });
 const ms_base = process.env.MS_URL || "http://localhost:80";
+console.log(ms_base);
+console.log(process.env.DISCORD_TOKEN);
 client.login(process.env.DISCORD_TOKEN);
 
 client.on("ready", () => {
