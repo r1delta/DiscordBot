@@ -7,7 +7,7 @@ const client = new Client({
     GatewayIntentBits.GuildPresences,
   ],
 });
-
+const ms_base = process.env.MS_URL || "http://localhost:80";
 client.login(process.env.DISCORD_TOKEN);
 
 client.on("ready", () => {
@@ -24,7 +24,7 @@ client.on("ready", () => {
 
 client.on("guildMemberRemove", (member) => {
   console.log(`${member.user.username} left the server`);
-  fetch("http://localhost:80/discord-auth", {
+  fetch(`${ms_base}/discord-auth`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +48,7 @@ client.on("guildMembersChunk", (members) => {
     }
   });
 
-  fetch("http://localhost:80/discord-auth-chunk", {
+  fetch(`${ms_base}/discord-auth-chunk`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -70,7 +70,7 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
     console.log("User has the role");
     console.log(newMember.user.username);
     // add user id to whitelist
-    fetch("http://localhost:80/discord-auth", {
+    fetch(`${ms_base}/discord-auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -83,7 +83,7 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
   } else {
     console.log("User does not have the role");
     console.log(newMember.user.username);
-    fetch("http://localhost:80/discord-auth", {
+    fetch(`${ms_base}/discord-auth`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
