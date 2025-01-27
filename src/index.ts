@@ -34,6 +34,7 @@ client.on("guildMemberRemove", (member) => {
     body: JSON.stringify({
       discord_id: member.user.id,
       username: member.user.username,
+      displayName: member.user.displayName,
     }),
   });
 });
@@ -46,6 +47,8 @@ client.on("guildMembersChunk", (members) => {
       usersWithRole.push({
         discord_id: member.user.id,
         username: member.user.username,
+        displayName: member.user.displayName,
+        serverDisplayName: member.displayName,
       });
     }
   });
@@ -80,6 +83,7 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
       body: JSON.stringify({
         discord_id: newMember.user.id,
         username: newMember.user.username,
+        displayName: newMember.user.displayName,
       }),
     });
   } else {
