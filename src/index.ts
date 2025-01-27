@@ -59,7 +59,7 @@ client.on("guildMembersChunk", async (members) => {
     body: JSON.stringify(usersWithRole),
   });
   const data = await result.text();
-  console.log(data);
+  // console.log(data);
 });
 
 // every 1 minute check if user has role
