@@ -9,7 +9,6 @@ const client = new Client({
 });
 const ms_base = process.env.MS_URL || "http://localhost:80";
 console.log(ms_base);
-console.log(process.env.DISCORD_TOKEN);
 client.login(process.env.DISCORD_TOKEN);
 
 client.on("ready", () => {
@@ -39,7 +38,7 @@ client.on("guildMemberRemove", (member) => {
   });
 });
 
-client.on("guildMembersChunk", (members) => {
+client.on("guildMembersChunk", async (members) => {
   console.log(`Received ${members.size} members`);
   const usersWithRole: any = [];
   members.forEach((member) => {
@@ -47,19 +46,20 @@ client.on("guildMembersChunk", (members) => {
       usersWithRole.push({
         discord_id: member.user.id,
         username: member.user.username,
-        displayName: member.user.displayName,
-        serverDisplayName: member.displayName,
+        display_name: member.user.displayName,
       });
     }
   });
 
-  fetch(`${ms_base}/discord-auth-chunk`, {
+  const result = await fetch(`${ms_base}/discord-auth-chunk`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(usersWithRole),
   });
+  const data = await result.text();
+  console.log(data);
 });
 
 // every 1 minute check if user has role
