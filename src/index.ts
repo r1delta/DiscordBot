@@ -59,7 +59,7 @@ client.on("guildMembersChunk", async (members) => {
     body: JSON.stringify(usersWithRole),
   });
   const data = await result.text();
-  // console.log(data);
+  console.log(data);
 });
 
 // every 1 minute check if user has role
@@ -79,11 +79,14 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.MS_TOKEN}`,
       },
+
       body: JSON.stringify({
         discord_id: newMember.user.id,
         username: newMember.user.username,
-        displayName: newMember.user.displayName,
+        display_name: newMember.user.displayName,
+        pomelo_name: newMember.nickname,
       }),
     });
   } else {
