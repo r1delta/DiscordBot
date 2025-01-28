@@ -57,6 +57,7 @@ client.on("guildMembersChunk", async (members) => {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.MS_TOKEN}`,
     },
     body: JSON.stringify(usersWithRole),
   });
