@@ -47,6 +47,7 @@ client.on("guildMembersChunk", async (members) => {
         discord_id: member.user.id,
         username: member.user.username,
         display_name: member.user.displayName,
+        pomelo_name: member.nickname,
       });
     }
   });
