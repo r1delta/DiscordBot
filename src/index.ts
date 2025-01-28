@@ -43,12 +43,13 @@ client.on("guildMembersChunk", async (members) => {
   const usersWithRole: any = [];
   members.forEach((member) => {
     if (member.roles.cache.has("1214775914836008990")) {
-      usersWithRole.push({
+      const jsonBody = {
         discord_id: member.user.id,
         username: member.user.username,
         display_name: member.user.displayName,
-        pomelo_name: member.nickname,
-      });
+        pomelo_name: member.displayName,
+      };
+      usersWithRole.push(jsonBody);
     }
   });
 
@@ -75,6 +76,14 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
     // do something
     console.log("User has the role");
     console.log(newMember.user.username);
+    console.log(newMember.user.displayName);
+    const jsonBody = {
+      discord_id: newMember.user.id,
+      username: newMember.user.username,
+      display_name: newMember.user.displayName,
+      pomelo_name: newMember.displayName,
+    };
+    console.log(jsonBody);
     // add user id to whitelist
     fetch(`${ms_base}/discord-auth`, {
       method: "POST",
@@ -82,13 +91,7 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${process.env.MS_TOKEN}`,
       },
-
-      body: JSON.stringify({
-        discord_id: newMember.user.id,
-        username: newMember.user.username,
-        display_name: newMember.user.displayName,
-        pomelo_name: newMember.nickname,
-      }),
+      body: JSON.stringify(jsonBody),
     });
   } else {
     console.log("User does not have the role");
