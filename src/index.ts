@@ -66,11 +66,11 @@ client.on("guildMembersChunk", async (members) => {
 });
 
 // every 1 minute check if user has role
-setInterval(() => {
-  client.guilds.cache.forEach(async (guild) => {
-    await guild.members.fetch({});
-  });
-}, 60000);
+// setInterval(() => {
+//   client.guilds.cache.forEach(async (guild) => {
+//     await guild.members.fetch({});
+//   });
+// }, 60000);
 
 client.on("guildMemberUpdate", (oldMember, newMember) => {
   if (newMember.roles.cache.has("1214775914836008990")) {
