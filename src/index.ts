@@ -72,7 +72,7 @@ client.on("guildMembersChunk", async (members) => {
 //   });
 // }, 60000);
 
-client.on("guildMemberUpdate", (oldMember, newMember) => {
+client.on("guildMemberUpdate", async (oldMember, newMember) => {
   if (newMember.roles.cache.has("1214775914836008990")) {
     // do something
     console.log("User has the role");
@@ -86,7 +86,7 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
     };
     console.log(jsonBody);
     // add user id to whitelist
-    fetch(`${ms_base}/discord-auth`, {
+    const res = await fetch(`${ms_base}/discord-auth`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -94,6 +94,8 @@ client.on("guildMemberUpdate", (oldMember, newMember) => {
       },
       body: JSON.stringify(jsonBody),
     });
+    const data = await res.text();
+    console.log(data);
   } else {
     console.log("User does not have the role");
     console.log(newMember.user.username);
