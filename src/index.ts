@@ -164,9 +164,12 @@ client.on("interactionCreate", async (interaction) => {
         const timestamp = parseInt(binaryTimestamp, 2) + 1420070400000; // Adds epoch
 
         var date = new Date(timestamp); // Get Unix time
-        await interaction.reply(
-          `Hello, ${targetUser.username}! your account is ${date.toString()}`
-        );
+        await interaction.reply({
+          content: `Hello, ${
+            targetUser.username
+          }! your account is ${date.toString()}`,
+          flags: MessageFlags.Ephemeral,
+        });
       } else {
         // Will be a long time until this ever happens...
         let binaryTimestamp = binarySnowflake.slice(0, 42);
@@ -177,7 +180,10 @@ client.on("interactionCreate", async (interaction) => {
         console.log(date.toString());
       }
     } else {
-      await interaction.reply("Hello!");
+      await interaction.reply({
+        content: "Please provide a user",
+        flags: MessageFlags.Ephemeral,
+      });
     }
   }
 });
