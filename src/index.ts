@@ -1,4 +1,13 @@
-import { Client, GatewayIntentBits, ActivityType } from "discord.js";
+import {
+  Client,
+  GatewayIntentBits,
+  ActivityType,
+  SlashCommandBuilder,
+  REST,
+  Routes,
+  MessageFlags,
+  Events,
+} from "discord.js";
 
 const client = new Client({
   intents: [
@@ -72,6 +81,30 @@ client.on("guildMembersChunk", async (members) => {
 //   });
 // }, 60000);
 
+const b = new SlashCommandBuilder().setName("hello").setDescription("Hello");
+
+const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
+
+// (async () => {
+//   try {
+//     console.log("Started refreshing application (/) commands.");
+
+//     await rest.put(
+//       Routes.applicationGuildCommands(
+//         "1304910395013595176",
+//         "1186901921567617115"
+//       ),
+//       {
+//         body: [b.toJSON()],
+//       }
+//     );
+
+//     console.log("Successfully reloaded application (/) commands.");
+//   } catch (error) {
+//     console.error(error);
+//   }
+// })();
+
 client.on("guildMemberUpdate", async (oldMember, newMember) => {
   if (newMember.roles.cache.has("1214775914836008990")) {
     // do something
@@ -111,3 +144,43 @@ client.on("guildMemberUpdate", async (oldMember, newMember) => {
     });
   }
 });
+
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isChatInputCommand()) return;
+  if (interaction.commandName === "hello") {
+    const targetUser = interaction.options.getUser("target");
+    if (targetUser) {
+      const snowflake = targetUser.id;
+      const number = parseInt(snowflake, 10);
+      let binarySnowflake = convert(number);
+
+      if (binarySnowflake.length < 64) {
+        // Snowflake-to-date function.
+        const n = 64 - binarySnowflake.length;
+        const zero = "0";
+        const sfbitSnowflake = zero.repeat(n) + binarySnowflake; // Adds zeros as needed to format into 64-bit.
+
+        let binaryTimestamp = sfbitSnowflake.slice(0, 42);
+        const timestamp = parseInt(binaryTimestamp, 2) + 1420070400000; // Adds epoch
+
+        var date = new Date(timestamp); // Get Unix time
+        await interaction.reply(
+          `Hello, ${targetUser.username}! your account is ${date.toString()}`
+        );
+      } else {
+        // Will be a long time until this ever happens...
+        let binaryTimestamp = binarySnowflake.slice(0, 42);
+
+        const timestamp = parseInt(binaryTimestamp, 2) + 1420070400000;
+
+        var date = new Date(timestamp);
+        console.log(date.toString());
+      }
+    } else {
+      await interaction.reply("Hello!");
+    }
+  }
+});
+function convert(number: number) {
+  return number.toString(2);
+}
