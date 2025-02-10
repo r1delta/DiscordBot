@@ -181,7 +181,7 @@ client.on("interactionCreate", async (interaction) => {
       }
     } else {
       await interaction.reply({
-        content: "Please provide a user",
+        content: "Hello!",
         flags: MessageFlags.Ephemeral,
       });
     }
