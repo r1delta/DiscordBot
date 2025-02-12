@@ -23,10 +23,10 @@ client.login(process.env.DISCORD_TOKEN);
 client.on("ready", () => {
   console.log(`Logged in as ${client?.user?.tag}`);
   client.user?.setStatus("invisible");
-  // client.user?.setActivity("r1", {
-  //   type: ActivityType.Custom,
-  //   state: "🙂",
-  // });
+  client.user?.setActivity("r1", {
+    type: ActivityType.Playing,
+    state: "r1delta",
+  });
   client.guilds.cache.forEach(async (guild) => {
     await guild.members.fetch({});
   });
