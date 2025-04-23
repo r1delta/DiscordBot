@@ -81,7 +81,9 @@ client.on("guildMembersChunk", async (members) => {
 //   });
 // }, 60000);
 
-const b = new SlashCommandBuilder().setName("hello").setDescription("Hello");
+const b = new SlashCommandBuilder()
+  .setName("servers")
+  .setDescription("Lists all current R1Delta servers.");
 
 const rest = new REST().setToken(process.env.DISCORD_TOKEN!);
 
@@ -186,7 +188,89 @@ client.on("interactionCreate", async (interaction) => {
       });
     }
   }
+  if (interaction.commandName === "servers") {
+    const servers = await fetch(`${ms_base}/servers`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.MS_TOKEN}`,
+      },
+    });
+    const data = await servers.json();
+
+    await interaction.reply({
+      embeds: [
+        {
+          title: "R1Delta Servers",
+          description: "List of all current R1Delta servers.",
+          fields: data.map((guild) => {
+            return {
+              name: guild.host_name,
+              value: `IP: ${guild.ip}\nPort: ${guild.port}\n Map: ${getMapName(
+                guild.map_name
+              )}\nPlaylist: ${getPlaylistName(guild.playlist)}\nPlayers: ${
+                guild.players.length
+              }/${guild.max_players}\n${
+                guild.description ? `Description: ${guild.description}` : ""
+              }`,
+            };
+          }),
+        },
+      ],
+      // flags: MessageFlags.Ephemeral,
+    });
+  }
 });
+
+function getMapName(map: string): string {
+  if (map === "mp_corporate") return "Corporate";
+  else if (map === "mp_fracture") return "Fracture";
+  else if (map === "mp_harmony_mines") return "Dig Site";
+  else if (map === "mp_haven") return "Haven";
+  else if (map === "mp_lagoon") return "Lagoon";
+  else if (map === "mp_lobby") return "Lobby";
+  else if (map === "mp_nexus") return "Nexus";
+  else if (map === "mp_npe") return "Pilot Training";
+  else if (map === "mp_outpost_207") return "Outpost 207";
+  else if (map === "mp_overlook") return "Overlook";
+  else if (map === "mp_sandtrap") return "Sandtrap";
+  else if (map === "mp_swampland") return "Swampland";
+  else if (map === "mp_wargames") return "War Games";
+  else if (map === "mp_relic") return "Relic";
+  else if (map === "mp_o2") return "Demeter";
+  else if (map === "mp_colony") return "Colony";
+  else if (map === "mp_runoff") return "Runoff";
+  else if (map === "mp_smugglers_cove") return "Smuggler's Cove";
+  else if (map === "mp_switchback") return "Export";
+  else if (map === "mp_angel_city") return "Angel City";
+  else if (map === "mp_backwater") return "Backwater";
+  else if (map === "mp_zone_18") return "Zone 18";
+  else if (map === "mp_airbase") return "Airbase";
+  else if (map === "mp_boneyard") return "Boneyard";
+  else if (map === "mp_rise") return "Rise";
+  else if (map === "mp_training_ground") return "Training Ground";
+  else return map.startsWith("mp_") ? map.substring(3) : map;
+}
+
+function getPlaylistName(playlist: string): string {
+  if (playlist === "private_match") return "Private Match";
+  else if (playlist === "mfd") return "Marked for Death";
+  else if (playlist === "mfdp") return "MFD Pro";
+  else if (playlist === "at") return "Attrition";
+  else if (playlist === "campaign_carousel") return "Campaign";
+  else if (playlist === "coop") return "Frontier Defense";
+  else if (playlist === "lts") return "Last Titan Standing";
+  else if (playlist === "lava") return "Deadly Ground";
+  else if (playlist === "wlts") return "Wingman LTS";
+  else if (playlist === "cp") return "Hardpoints";
+  else if (playlist === "ctf") return "Capture the Flag";
+  else if (playlist === "ps") return "Pilot Skirmish";
+  else if (playlist === "all") return "Variety Pack";
+  else if (playlist === "tdm") return "Pilot Hunter";
+  else if (playlist === "Load a map on the command line") return "";
+  else return playlist;
+}
+
 function convert(number: number) {
   return number.toString(2);
 }
