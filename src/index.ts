@@ -206,6 +206,7 @@ client.on("interactionCreate", async (interaction) => {
           fields: data.map((guild) => {
             return {
               name: guild.host_name,
+              inline: true,
               value: `IP: ${guild.ip}\nPort: ${guild.port}\n Map: ${getMapName(
                 guild.map_name
               )}\nPlaylist: ${getPlaylistName(guild.playlist)}\nPlayers: ${
