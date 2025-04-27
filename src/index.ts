@@ -8,6 +8,7 @@ import {
   MessageFlags,
   Events,
 } from "discord.js";
+const { Pagination } = require("pagination.djs");
 
 const client = new Client({
   intents: [
@@ -197,29 +198,34 @@ client.on("interactionCreate", async (interaction) => {
       },
     });
     const data = await servers.json();
-
-    await interaction.reply({
-      embeds: [
-        {
-          title: "R1Delta Servers",
-          description: "List of all current R1Delta servers.",
-          fields: data.map((guild) => {
-            return {
-              name: guild.host_name,
-              inline: true,
-              value: `IP: ${guild.ip}\nPort: ${guild.port}\n Map: ${getMapName(
-                guild.map_name
-              )}\nPlaylist: ${getPlaylistName(guild.playlist)}\nPlayers: ${
-                guild.players.length
-              }/${guild.max_players}\n${
-                guild.description ? `Description: ${guild.description}` : ""
-              }`,
-            };
-          }),
-        },
-      ],
-      // flags: MessageFlags.Ephemeral,
+    // sort the data by players
+    const sorted = data.sort((a: any, b: any) => {
+      return b.total_players - a.total_players;
     });
+
+    const pagination = new Pagination(interaction, {
+      limit: 5,
+      loop: true,
+    });
+    pagination.setTitle("R1Delta Servers");
+    pagination.setDescription("List of all current R1Delta servers.");
+    pagination.setFields(
+      sorted.map((guild) => {
+        return {
+          name: guild.host_name,
+          // inline: true,b
+          value: `IP: ${guild.ip}:${guild.port}\n Map: ${getMapName(
+            guild.map_name
+          )}\nPlaylist: ${getPlaylistName(guild.playlist)}\nPlayers: ${
+            guild.players.length
+          }/${guild.max_players}\n${
+            guild.description ? `Description: ${guild.description}` : ""
+          }`,
+        };
+      })
+    );
+    pagination.paginateFields();
+    pagination.render();
   }
 });
 
