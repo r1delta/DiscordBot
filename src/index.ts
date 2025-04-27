@@ -208,7 +208,16 @@ client.on("interactionCreate", async (interaction) => {
       loop: true,
     });
     pagination.setTitle("R1Delta Servers");
-    pagination.setDescription("List of all current R1Delta servers.");
+    pagination.setDescription(
+      "List of all current R1Delta servers. \n Total servers: " +
+        sorted.length +
+        "\n Current players: " +
+        sorted.reduce(
+          (acc: number, guild: any) => acc + guild.total_players,
+          0
+        ) +
+        "\n"
+    );
     pagination.setFields(
       sorted.map((guild) => {
         return {
@@ -224,6 +233,7 @@ client.on("interactionCreate", async (interaction) => {
         };
       })
     );
+
     pagination.paginateFields();
     pagination.render();
   }
