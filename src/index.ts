@@ -7,8 +7,9 @@ import {
   Routes,
   MessageFlags,
   Events,
+  EmbedBuilder,
 } from "discord.js";
-const { Pagination } = require("pagination.djs");
+import { Pagination } from "pagination.djs";
 
 const client = new Client({
   intents: [
@@ -208,22 +209,21 @@ client.on("interactionCreate", async (interaction) => {
       loop: true,
     });
     pagination.setTitle("R1Delta Servers");
+    pagination.setColor("#8B2D2D");
+    const onlinePlayers = sorted.reduce(
+      (acc: number, guild: any) => acc + guild.total_players,
+      0
+    );
+
     pagination.setDescription(
-      "List of all current R1Delta servers. \n Total servers: " +
-        sorted.length +
-        "\n Current players: " +
-        sorted.reduce(
-          (acc: number, guild: any) => acc + guild.total_players,
-          0
-        ) +
-        "\n"
+      "List of all current R1Delta servers. \n Total servers: " + sorted.length
     );
     pagination.setFields(
       sorted.map((guild) => {
         return {
           name: guild.host_name,
           // inline: true,b
-          value: `IP: ${guild.ip}:${guild.port}\n Map: ${getMapName(
+          value: `IP: \`${guild.ip}:${guild.port}\`\nMap: ${getMapName(
             guild.map_name
           )}\nPlaylist: ${getPlaylistName(guild.playlist)}\nPlayers: ${
             guild.players.length
@@ -233,7 +233,9 @@ client.on("interactionCreate", async (interaction) => {
         };
       })
     );
-
+    pagination.setFooter({
+      text: `Players Online: ${onlinePlayers}\nPage: {pageNumber}/{totalPages}`,
+    });
     pagination.paginateFields();
     pagination.render();
   }
