@@ -222,6 +222,9 @@ client.on("interactionCreate", async (interaction) => {
     // filter out color codes from server names
     sorted.forEach((guild: any) => {
       guild.host_name = guild.host_name.replace(/\^[A-Fa-f0-9]{6,8}/g, "");
+      guild.description = guild.description
+        ? guild.description.replace(/\^[A-Fa-f0-9]{6,8}/g, "")
+        : "";
     });
 
     pagination.setFields(
