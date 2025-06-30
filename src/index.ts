@@ -218,6 +218,12 @@ client.on("interactionCreate", async (interaction) => {
     pagination.setDescription(
       "List of all current R1Delta servers. \n Total servers: " + sorted.length
     );
+
+    // filter out color codes from server names
+    sorted.forEach((guild: any) => {
+      guild.host_name = guild.host_name.replace(/<\w+>/g, "");
+    });
+
     pagination.setFields(
       sorted.map((guild) => {
         return {
