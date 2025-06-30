@@ -53,16 +53,16 @@ client.on("guildMembersChunk", async (members) => {
   console.log(`Received ${members.size} members`);
   const usersWithRole: any = [];
   members.forEach((member) => {
-    if (member.roles.cache.has("1214775914836008990")) {
-      const jsonBody = {
-        discord_id: member.user.id,
-        username: member.user.username,
-        display_name: member.user.displayName,
-        pomelo_name: member.displayName,
-      };
-      usersWithRole.push(jsonBody);
-    }
+    const jsonBody = {
+      discord_id: member.user.id,
+      username: member.user.username,
+      display_name: member.user.displayName,
+      pomelo_name: member.displayName,
+    };
+    usersWithRole.push(jsonBody);
   });
+
+  console.log(`Found ${usersWithRole.length} users with the role`);
 
   const result = await fetch(`${ms_base}/discord-auth-chunk`, {
     method: "POST",
